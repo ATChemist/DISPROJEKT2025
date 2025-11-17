@@ -1,10 +1,6 @@
 const express = require("express");
 const path = require("path");
 
-// Dette er et CommonJS-projekt (se package.json "type": "commonjs").
-// Derfor bruger vi den indbyggede __dirname i stedet for ESM-syntaks
-// (import/meta URL). Fjernede forkert 'from "url"' import.
-
 const app = express();
 
 // (1) Statisk hosting af /public
@@ -16,7 +12,6 @@ res.json({ ok: true, ts: Date.now() });
 });
 
 app.get("/api/events", (req, res) => {
-// Dummy data – kan senere komme fra DB
 res.json([
 { id: "e-101", title: "Guidet Byvandring", when: "2025-12-01 10:00", spots: 12 },
 { id: "e-102", title: "Keramik Workshop", when: "2025-12-02 14:00", spots: 8 },
