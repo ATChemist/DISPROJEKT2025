@@ -1,0 +1,95 @@
+
+.events-page {
+    padding-top: 120px; /* så navbar ikke overlapper */
+    background: #050816; /* mørk baggrund som forsiden */
+    min-height: 100vh;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.events-hero {
+    max-width: 900px;
+    margin: 0 auto 40px auto;
+    padding: 0 30px;
+}
+
+.events-hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.events-hero p {
+    font-size: 18px;
+    opacity: 0.85;
+}
+
+.events-list-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 30px 60px 30px;
+}
+
+.events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 26px;
+}
+
+
+.event-card {
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 16px;
+    padding: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    transition: transform 0.15s ease, border 0.15s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(241, 249, 126, 0.4);
+}
+
+.event-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.event-card p {
+    margin: 3px 0;
+    opacity: 0.85;
+}
+
+
+.event-thumb {
+    overflow: hidden;
+    border-radius: 12px;
+    margin: -4px -4px 12px -4px;
+}
+
+.event-thumb img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.event-body .event-meta {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.event-body .event-desc {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+
+.event-card .btn-primary.small {
+    margin-top: 12px;
+    width: fit-content;
+}

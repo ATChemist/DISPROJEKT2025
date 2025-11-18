@@ -1,0 +1,81 @@
+<!-- her henter vi det enkelte event-->
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event detalje</title>
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/event.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+        <div class="logo">Understory dis 2025</div>
+
+        <nav>
+            <ul>
+                <li><a href="#">Produkt</a></li>
+                <li><a href="#">Se demo</a></li>
+                <li><a href="#">Priser</a></li>
+                <li><a href="#">Community</a></li>
+                <li><a href="#">Login</a></li>
+                <li><a href="/events.html"> Events</a></li>
+            </ul>
+        </nav>
+    </div>
+
+
+    <div class="nav-right">
+      <a href="#" class="btn-outline small">Book demo</a>
+      <a href="#" class="btn-primary small">Kom i gang</a>
+    </div>
+  </header>
+
+  <main class="event-detail-page">
+    <section class="event-detail-hero">
+      <div class="event-detail-back">
+        <a href="/events">← Tilbage til events</a>
+      </div>
+
+      <div class="event-detail-layout">
+        <div class="event-detail-main">
+          <p class="event-category" id="event-category"></p>
+          <h1 id="event-title"></h1>
+          <p class="event-meta-line" id="event-meta"></p>
+          <p class="event-host" id="event-host"></p>
+          <p class="event-description" id="event-description"></p>
+        </div>
+
+        <aside class="event-detail-side">
+          <div class="event-thumb-large">
+            <img id="event-image" alt="" />
+          </div>
+
+          <div class="event-info-box">
+            <p><strong>Dato & tid:</strong> <span id="event-when"></span></p>
+            <p><strong>Varighed:</strong> <span id="event-duration"></span></p>
+            <p><strong>Sted:</strong> <span id="event-location"></span></p>
+            <p><strong>Ledige pladser:</strong> <span id="event-spots"></span></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="event-extra">
+      <h2>Community for dette event</h2>
+      <p>Her kommer chatten, media wall og SMS-tilmelding til at ligge.</p>
+
+      <div id="chat-root">
+        <!-- senere: chat UI -->
+      </div>
+    </section>
+  </main>
+
+  <script src="/event.js"></script>
+</body>
+</html>

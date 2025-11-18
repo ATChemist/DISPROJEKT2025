@@ -10,10 +10,11 @@ body {
     overflow-x: hidden;
 }
 
-.h1 {
-color:white;
-}
 
+.hero-content{
+    color:white;
+    padding: 20px;
+}
 .navbar {
     position: absolute;
     top: 0;
