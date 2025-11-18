@@ -3,10 +3,9 @@ const path = require("path");
 
 const app = express();
 
-// (1) Statisk hosting af /public
 app.use(express.static(path.join(__dirname, "../public")));
 
-// (2) Simple API’er
+
 app.get("/api/health", (req, res) => {
 res.json({ ok: true, ts: Date.now() });
 });
