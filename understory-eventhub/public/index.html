@@ -10,6 +10,36 @@
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
+<!-- Login pop-up boks -->
+<div id="login-modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="login-close-btn">&times;</button>
+    <h2>Vært login</h2>
+
+    <form method="POST" action="/auth/login">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">Kodeord</label>
+        <input
+          id="login-password"
+          type="password"
+          name="password"
+          required
+        />
+      </div>
+
+      <button type="submit">Log ind</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/login-modal.js"></script>
+
+
 <body>
 
 <!-- navigations baren i toppen-->
@@ -23,7 +53,7 @@
                 <li><a href="#">Se demo</a></li>
                 <li><a href="#">Priser</a></li>
                 <li><a href="#">Community</a></li>
-                <li><a href="#">Login</a></li>
+                <li><a href="#" id="login-link">Login</a></li>
                 <li><a href="events.html"> Events</a></li>
             </ul>
         </nav>
