@@ -10,7 +10,10 @@
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<!-- Login pop-up boks -->
+
+<body>
+
+<!-- LOGIN MODAL -->
 <div id="login-modal-overlay" class="modal-overlay">
   <div class="modal">
     <button class="modal-close" id="login-close-btn">&times;</button>
@@ -24,39 +27,62 @@
 
       <div class="form-group">
         <label for="login-password">Kodeord</label>
-        <input
-          id="login-password"
-          type="password"
-          name="password"
-          required
-        />
+        <input id="login-password" type="password" name="password" required />
       </div>
 
       <button type="submit">Log ind</button>
+
+      <p class="switch-auth">
+        Har du ingen konto?
+        <a href="#" id="open-register-from-login">Opret en konto</a>
+      </p>
     </form>
   </div>
 </div>
 
-<script src="/js/login-modal.js"></script>
+<!-- REGISTER MODAL -->
+<div id="register-modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="register-close-btn">&times;</button>
+    <h2>Opret konto</h2>
 
+    <form method="POST" action="/auth/register">
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input id="reg-email" type="email" name="email" required />
+      </div>
 
-<body>
+      <div class="form-group">
+        <label for="reg-password">Kodeord</label>
+        <input id="reg-password" type="password" name="password" required />
+      </div>
 
-<!-- navigations baren i toppen-->
+      <button type="submit">Opret konto</button>
+    </form>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
 <header class="navbar">
     <div class="nav-left">
         <div class="logo">Understory dis 2025</div>
 
-        <nav>
-            <ul>
-                <li><a href="#">Produkt</a></li>
-                <li><a href="#">Se demo</a></li>
-                <li><a href="#">Priser</a></li>
-                <li><a href="#">Community</a></li>
-                <li><a href="#" id="login-link">Login</a></li>
-                <li><a href="events.html"> Events</a></li>
-            </ul>
-        </nav>
+           <nav>
+  <ul>
+    <li><a href="#">Produkt</a></li>
+    <li><a href="#">Se demo</a></li>
+    <li><a href="#">Priser</a></li>
+    <li><a href="#">Community</a></li>
+
+            <li id="nav-login-item"><a href="#" id="login-link">Login</a></li>
+            <li id="nav-logout-item" style="display:none;">
+              <form method="POST" action="/auth/logout" id="logout-form">
+                <button type="submit" class="nav-link-button">Log ud</button>
+              </form>
+            </li>
+  </ul>
+</nav>
+
     </div>
 
     <div class="nav-right">
@@ -65,13 +91,12 @@
     </div>
 </header>
 
-<!-- Videon der kører i baggrunden som på deres side -->
+<!-- HERO SECTION -->
 <section class="hero">
     <video class="hero-video" autoplay muted loop playsinline>
         <source src="/media/hero.mp4" type="video/mp4">
     </video>
 
-    <!-- Mørk overlay som på Understory -->
     <div class="overlay"></div>
 
     <div class="hero-content">
@@ -88,6 +113,8 @@
         </div>
     </div>
 </section>
+
+<script src="/js/login-modal.js"></script>
 
 </body>
 </html>

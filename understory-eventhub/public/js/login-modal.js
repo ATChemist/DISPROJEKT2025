@@ -1,25 +1,77 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ELEMENTER
   const loginLink = document.getElementById("login-link");
-  const overlay = document.getElementById("login-modal-overlay");
-  const closeBtn = document.getElementById("login-close-btn");
 
-  if (!loginLink || !overlay || !closeBtn) return;
+  const loginModal = document.getElementById("login-modal-overlay");
+  const registerModal = document.getElementById("register-modal-overlay");
 
-  // Åbn modal når man klikker på "Login" i menuen
-  loginLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    overlay.classList.add("active");
+  const loginCloseBtn = document.getElementById("login-close-btn");
+  const registerCloseBtn = document.getElementById("register-close-btn");
+
+  const openRegisterFromLogin = document.getElementById("open-register-from-login");
+
+  if (!loginModal || !registerModal) return;
+
+  function openModal(modal) {
+    modal.classList.add("active");   // BRUGER KUN 'active'
+  }
+
+  function closeModal(modal) {
+    modal.classList.remove("active");
+  }
+
+  // ÅBN LOGIN-MODAL FRA NAVBAR
+  if (loginLink) {
+    loginLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal(loginModal);
+    });
+  }
+
+  // LUK LOGIN-MODAL
+  if (loginCloseBtn) {
+    loginCloseBtn.addEventListener("click", () => closeModal(loginModal));
+  }
+  loginModal.addEventListener("click", (e) => {
+    if (e.target === loginModal) closeModal(loginModal);
   });
 
-  // Luk modal når man klikker på krydset
-  closeBtn.addEventListener("click", () => {
-    overlay.classList.remove("active");
-  });
+  // ÅBN REGISTER-MODAL FRA LINK UNDER LOGIN
+  if (openRegisterFromLogin) {
+    openRegisterFromLogin.addEventListener("click", (e) => {
+      e.preventDefault();
+      closeModal(loginModal);
+      openModal(registerModal);
+    });
+  }
 
-  // Luk modal når man klikker udenfor boksen
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-      overlay.classList.remove("active");
+  // LUK REGISTER-MODAL
+  if (registerCloseBtn) {
+    registerCloseBtn.addEventListener("click", () => closeModal(registerModal));
+  }
+  registerModal.addEventListener("click", (e) => {
+    if (e.target === registerModal) closeModal(registerModal);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const loginItem = document.getElementById("nav-login-item");
+  const logoutItem = document.getElementById("nav-logout-item");
+
+  // Tjek login status
+  try {
+    // server route er /api/auth-status (med bindestreg)
+    const res = await fetch("/api/auth-status");
+    const data = await res.json();
+
+    if (data.loggedIn) {
+      if (loginItem) loginItem.style.display = "none";
+      if (logoutItem) logoutItem.style.display = "block";
+    } else {
+      if (loginItem) loginItem.style.display = "block";
+      if (logoutItem) logoutItem.style.display = "none";
     }
-  });
+  } catch (err) {
+    console.error("Auth status fejlede:", err);
+  }
 });
