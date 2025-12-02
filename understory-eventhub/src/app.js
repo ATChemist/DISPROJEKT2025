@@ -46,4 +46,9 @@ app.get("/host/dashboard", requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, "../public/host-dashboard.html"));
 });
 
+// Also support legacy /host route -> redirect to dashboard
+app.get('/host', requireAuth, (_req, res) => {
+  return res.redirect('/host/dashboard');
+});
+
 module.exports = app;

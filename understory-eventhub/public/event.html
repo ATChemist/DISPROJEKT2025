@@ -19,12 +19,18 @@
 
         <nav>
             <ul>
-                <li><a href="#">Produkt</a></li>
+                <li><a href="/">Produkt</a></li>
                 <li><a href="#">Se demo</a></li>
+                <li><a href="/events">Events</a></li>
                 <li><a href="#">Priser</a></li>
                 <li><a href="#">Community</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="/events.html"> Events</a></li>
+                <li id="nav-dashboard-item" style="display:none;"><a href="/host/dashboard">Dashboard</a></li>
+                <li id="nav-login-item" style="display:none;"><a href="#" id="login-link">Login</a></li>
+                <li id="nav-logout-item" style="display:none;">
+                  <form method="POST" action="/auth/logout" id="logout-form">
+                    <button type="submit" class="nav-link-button">Log ud</button>
+                  </form>
+                </li>
             </ul>
         </nav>
     </div>
@@ -76,6 +82,7 @@
     </section>
   </main>
 
+  <script src="/js/login-modal.js"></script>
   <script src="/js/event.js"></script>
 </body>
 </html>

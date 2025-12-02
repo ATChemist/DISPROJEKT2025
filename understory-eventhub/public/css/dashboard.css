@@ -1,0 +1,260 @@
+/* ================================
+   GLOBALT – kun for dashboard
+================================ */
+
+body.dashboard-body {
+  background: #050816; /* samme mørke baggrund som events-siden */
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+}
+
+/* Container til alt indhold under navbaren */
+.dashboard-shell {
+  max-width: 1120px;
+  margin: 0 auto 64px;
+  padding: 120px 24px 0; /* 120px så vi kommer under navbaren */
+}
+
+/* ================================
+   TOPSEKTION (titel + stats)
+================================ */
+
+.dashboard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+/* Venstre del: Overblik + titel + velkomst + knapper */
+.dashboard-heading h1 {
+  font-size: 34px;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 4px;
+}
+
+.dashboard-welcome {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 2px;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Højre del: stat-kort */
+.dashboard-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 220px;
+}
+
+.stat-card {
+  background: rgba(15, 23, 42, 0.85);
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ================================
+   SEKTIONS-HEADER
+================================ */
+
+.dashboard-section {
+  margin-top: 12px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.section-header h2 {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ================================
+   EVENTS GRID
+================================ */
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 18px;
+}
+
+/* ================================
+   EVENT CARDS (dashboard)
+================================ */
+
+.event-card {
+  background: rgba(15, 23, 42, 0.85);          /* mørk glas */
+  border-radius: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 16px;
+
+  transition: transform 0.15s ease,
+              border-color 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(241, 249, 126, 0.45);   /* gul brand-kant */
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+}
+
+/* Venstre side i kortet */
+.event-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-title-row h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.event-meta {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.event-desc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Højre side i kortet (actions) */
+.event-footer {
+  display: flex;
+  align-items: flex-end;
+}
+
+.event-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Ghost-knapper til Rediger / Slet */
+.btn-ghost {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(15, 23, 42, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  color: #f9fafb;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: rgba(241, 249, 126, 0.12);
+  border-color: rgba(241, 249, 126, 0.8);
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 24px;
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ================================
+   RESPONSIVT
+================================ */
+
+@media (max-width: 768px) {
+  .dashboard-shell {
+    padding: 96px 16px 24px;
+  }
+
+  .dashboard-top {
+    flex-direction: column;
+  }
+
+  .dashboard-summary {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .dashboard-summary .stat-card {
+    flex: 1 1 140px;
+  }
+
+  .event-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-footer {
+    align-self: flex-start;
+  }
+}

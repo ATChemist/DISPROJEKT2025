@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", async () => {
   const loginItem = document.getElementById("nav-login-item");
   const logoutItem = document.getElementById("nav-logout-item");
+  const dashboardItem = document.getElementById("nav-dashboard-item");
 
   // Tjek login status
   try {
@@ -67,9 +68,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (data.loggedIn) {
       if (loginItem) loginItem.style.display = "none";
       if (logoutItem) logoutItem.style.display = "block";
+      if (dashboardItem) dashboardItem.style.display = "block";
     } else {
       if (loginItem) loginItem.style.display = "block";
       if (logoutItem) logoutItem.style.display = "none";
+      if (dashboardItem) dashboardItem.style.display = "none";
     }
   } catch (err) {
     console.error("Auth status fejlede:", err);
