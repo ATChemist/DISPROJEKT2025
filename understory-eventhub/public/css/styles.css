@@ -15,6 +15,47 @@ body {
     color:white;
     padding: 20px;
 }
+
+/* ---------- DASHBOARD STYLES ---------- */
+.dashboard-header-simple { padding: 20px 0 10px 0; color: #111; }
+.dashboard-header-simple h1 { margin: 0; font-size: 36px; color: #111; }
+.dashboard-header-simple .muted { color: rgba(0,0,0,0.6); margin-top: 6px; }
+.dashboard-actions-container { display:flex; gap:12px; justify-content:flex-start; padding: 10px 0 18px 0; align-items:center; }
+.dashboard-actions-container .btn-primary { margin-left: 6px; }
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.dashboard-actions { display: flex; gap: 12px; align-items: center; }
+.muted { color: rgba(255,255,255,0.75); }
+
+.dashboard-main { padding: 32px 0 80px 0; }
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+.event-card {
+    display: flex;
+    gap: 12px;
+    background: rgba(255,255,255,0.04);
+    padding: 12px;
+    border-radius: 12px;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.event-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; }
+.event-body { flex: 1; }
+.event-body h3 { margin-bottom: 6px; }
+.event-actions { display:flex; gap:8px; margin-top: 8px; }
+
 .navbar {
     position: absolute;
     top: 0;

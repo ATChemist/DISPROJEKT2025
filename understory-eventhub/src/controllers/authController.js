@@ -92,7 +92,7 @@ exports.login = (req, res) => {
 
       console.log("Host logget ind:", host.email);
 
-      return res.redirect("/events.html"); // eller /host-dashboard.html
+      return res.redirect("/host/dashboard"); // redirect to protected dashboard
     });
   });
 };
