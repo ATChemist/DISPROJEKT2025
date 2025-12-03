@@ -93,10 +93,52 @@ function deleteEvent(id, callback) {
   });
 }
 
+function updateEvent(id, event, callback) {
+  const params = [
+    event.title,
+    event.shortDescription || event.description || null,
+    event.when || null,
+    event.duration || null,
+    event.spots || null,
+    event.location || null,
+    event.category || null,
+    event.thumbnail || null,
+    id,
+  ];
+
+  const sqlStart = `
+    UPDATE events
+    SET title = ?, shortDescription = ?, start_time = ?, duration = ?, spots = ?, location = ?, category = ?, thumbnail = ?
+    WHERE id = ?
+  `;
+  const sqlWhen = `
+    UPDATE events
+    SET title = ?, shortDescription = ?, "when" = ?, duration = ?, spots = ?, location = ?, category = ?, thumbnail = ?
+    WHERE id = ?
+  `;
+
+  db.run(sqlStart, params, function (err) {
+    if (err) {
+      const msg = err && err.message ? err.message : '';
+      if (err.code === 'SQLITE_CONSTRAINT' && msg.includes('events.when')) {
+        db.run(sqlWhen, params, function (err2) {
+          if (err2) return callback(err2);
+          return getEventById(id, callback);
+        });
+      } else {
+        return callback(err);
+      }
+    } else {
+      return getEventById(id, callback);
+    }
+  });
+}
+
 module.exports = {
   getAllEvents,
   getEventById,
   getEventsByHost,
   createEvent,
   deleteEvent,
+  updateEvent,
 };

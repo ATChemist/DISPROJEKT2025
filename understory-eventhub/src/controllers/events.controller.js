@@ -5,7 +5,9 @@ const {
   createEvent,
   getEventsByHost,
   deleteEvent,
+  updateEvent,
 } = require("../models/events.model");
+
 const {
   createEventSignup,
   getSignupsByEvent,
@@ -76,6 +78,59 @@ exports.createEvent = (req, res) => {
       return res.status(500).json({ error: "Kunne ikke oprette event" });
     }
     return res.status(201).json(created);
+  });
+};
+
+exports.updateEvent = (req, res) => {
+  const host = req.hostUser;
+  const id = req.params.id;
+
+  const {
+    title,
+    shortDescription,
+    when,
+    duration,
+    spots,
+    location,
+    category,
+    thumbnail,
+  } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: "Titel er påkrævet" });
+  }
+  if (!when) {
+    return res.status(400).json({ error: "Hvornår (dato/tid) er påkrævet" });
+  }
+
+  getEventById(id, (err, existing) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Databasefejl" });
+    }
+    if (!existing) return res.status(404).json({ error: "Event ikke fundet" });
+    if (existing.host_id !== host.id) {
+      return res.status(403).json({ error: "Ikke tilladt" });
+    }
+
+    const updated = {
+      title,
+      shortDescription,
+      when,
+      duration: duration || null,
+      spots: spots ? parseInt(spots, 10) : null,
+      location: location || null,
+      category: category || null,
+      thumbnail: thumbnail || null,
+    };
+
+    updateEvent(id, updated, (updateErr, row) => {
+      if (updateErr) {
+        console.error(updateErr);
+        return res.status(500).json({ error: "Kunne ikke opdatere event" });
+      }
+      return res.json(row);
+    });
   });
 };
 

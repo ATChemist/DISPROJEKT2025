@@ -5,15 +5,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('create-event-form');
   const hostEventsContainer = document.getElementById('host-events');
   const welcome = document.getElementById('host-welcome');
+  const modalTitle = modal ? modal.querySelector('h2') : null;
+  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+  const titleInput = document.getElementById('event-title');
+  const shortDescInput = document.getElementById('event-short-desc');
+  const whenInput = document.getElementById('event-when');
+  const durationInput = document.getElementById('event-duration');
+  const spotsInput = document.getElementById('event-spots');
+  const locationInput = document.getElementById('event-location');
+  const categoryInput = document.getElementById('event-category');
+  const thumbnailInput = document.getElementById('event-thumbnail');
 
   const emptyState = document.getElementById('events-empty-state');
   const statActive = document.getElementById('stat-active-events');
   const statUpcoming = document.getElementById('stat-upcoming-events');
 
-  function openModal() { modal.classList.add('active'); }
-  function closeModal() { modal.classList.remove('active'); }
+  let editingEventId = null;
 
-  if (openBtn) openBtn.addEventListener('click', openModal);
+  function resetFormMode() {
+    editingEventId = null;
+    if (modalTitle) modalTitle.textContent = 'Opret event';
+    if (submitBtn) submitBtn.textContent = 'Opret event';
+    if (form) form.reset();
+  }
+
+  function openModal() { modal.classList.add('active'); }
+  function closeModal() {
+    modal.classList.remove('active');
+    resetFormMode();
+  }
+
+  if (openBtn) openBtn.addEventListener('click', () => {
+    resetFormMode();
+    openModal();
+  });
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   if (modal) {
     modal.addEventListener('click', (e) => {
@@ -61,6 +86,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (statActive) statActive.textContent = total || '0';
     if (statUpcoming) statUpcoming.textContent = upcoming || '0';
+  }
+
+  function formatDateInput(value) {
+    if (!value) return '';
+    if (value.includes('T')) return value.slice(0, 16);
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function populateForm(ev) {
+    if (titleInput) titleInput.value = ev.title || '';
+    if (shortDescInput) shortDescInput.value = ev.shortDescription || '';
+    if (whenInput) whenInput.value = formatDateInput(ev.start_time || ev.when || '');
+    if (durationInput) durationInput.value = ev.duration || '';
+    if (spotsInput) spotsInput.value = ev.spots != null ? ev.spots : '';
+    if (locationInput) locationInput.value = ev.location || '';
+    if (categoryInput) categoryInput.value = ev.category || '';
+    if (thumbnailInput) thumbnailInput.value = ev.thumbnail || '';
+  }
+
+  function startEdit(ev) {
+    editingEventId = ev.id;
+    if (modalTitle) modalTitle.textContent = 'Rediger event';
+    if (submitBtn) submitBtn.textContent = 'Opdater event';
+    populateForm(ev);
+    openModal();
   }
 
   function renderEvents(events) {
@@ -200,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const editBtn = document.createElement('button');
       editBtn.className = 'btn-ghost';
       editBtn.textContent = 'Rediger';
-      // TODO: Add edit functionality her
+      editBtn.addEventListener('click', () => startEdit(ev));
 
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'btn-ghost';
@@ -238,23 +291,26 @@ document.addEventListener('DOMContentLoaded', () => {
         payload[k] = v;
       }
       if (payload.spots) payload.spots = parseInt(payload.spots, 10);
+      const targetId = editingEventId;
+      const url = targetId ? `/api/events/${targetId}` : '/api/events';
+      const method = targetId ? 'PUT' : 'POST';
+      const defaultErr = targetId ? 'Fejl ved opdatering' : 'Fejl ved oprettelse';
 
       try {
-        const res = await fetch('/api/events', {
-          method: 'POST',
+        const res = await fetch(url, {
+          method,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || 'Fejl ved oprettelse');
+          throw new Error(err.error || defaultErr);
         }
         closeModal();
-        form.reset();
         fetchMyEvents();
       } catch (err) {
-        console.error('Fejl ved oprettelse', err);
-        alert('Kunne ikke oprette event');
+        console.error('Fejl ved gem', err);
+        alert('Kunne ikke gemme event');
       }
     });
   }

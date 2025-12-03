@@ -1,6 +1,5 @@
 // public/event.js
 document.addEventListener("DOMContentLoaded", async () => {
-  // URL: /events/e-101 → ["", "events", "e-101"]
   const parts = window.location.pathname.split("/");
   const eventId = parts[parts.length - 1];
 

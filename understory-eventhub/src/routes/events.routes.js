@@ -9,6 +9,7 @@ const {
   deleteEvent,
   signupForEvent,
   listEventSignups,
+  updateEvent,
 } = require("../controllers/events.controller");
 const { requireAuth } = require("../auth.middleware");
 
@@ -21,6 +22,7 @@ router.get("/:id", getEvent);
 
 // Protected: create event, list host's events
 router.post("/", requireAuth, createEvent);
+router.put("/:id", requireAuth, updateEvent);
 router.delete("/:id", requireAuth, deleteEvent);
 
 module.exports = router;
