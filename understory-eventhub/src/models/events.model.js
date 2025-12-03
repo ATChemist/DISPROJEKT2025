@@ -2,7 +2,15 @@
 const db = require("../../db");
 
 function getAllEvents(callback) {
-  const sql = `SELECT e.*, h.email as host_email FROM events e LEFT JOIN hosts h ON e.host_id = h.id ORDER BY e.id DESC`;
+  const sql = `
+    SELECT
+      e.*,
+      h.email as host_email,
+      (SELECT COUNT(*) FROM event_signups s WHERE s.event_id = e.id) AS signup_count
+    FROM events e
+    LEFT JOIN hosts h ON e.host_id = h.id
+    ORDER BY e.id DESC
+  `;
   db.all(sql, [], (err, rows) => {
     if (err) return callback(err);
     callback(null, rows);
@@ -10,7 +18,15 @@ function getAllEvents(callback) {
 }
 
 function getEventById(id, callback) {
-  const sql = `SELECT e.*, h.email as host_email FROM events e LEFT JOIN hosts h ON e.host_id = h.id WHERE e.id = ?`;
+  const sql = `
+    SELECT
+      e.*,
+      h.email as host_email,
+      (SELECT COUNT(*) FROM event_signups s WHERE s.event_id = e.id) AS signup_count
+    FROM events e
+    LEFT JOIN hosts h ON e.host_id = h.id
+    WHERE e.id = ?
+  `;
   db.get(sql, [id], (err, row) => {
     if (err) return callback(err);
     callback(null, row);
@@ -18,7 +34,16 @@ function getEventById(id, callback) {
 }
 
 function getEventsByHost(hostId, callback) {
-  const sql = `SELECT e.*, h.email as host_email FROM events e LEFT JOIN hosts h ON e.host_id = h.id WHERE e.host_id = ? ORDER BY e.id DESC`;
+  const sql = `
+    SELECT
+      e.*,
+      h.email as host_email,
+      (SELECT COUNT(*) FROM event_signups s WHERE s.event_id = e.id) AS signup_count
+    FROM events e
+    LEFT JOIN hosts h ON e.host_id = h.id
+    WHERE e.host_id = ?
+    ORDER BY e.id DESC
+  `;
   db.all(sql, [hostId], (err, rows) => {
     if (err) return callback(err);
     callback(null, rows);

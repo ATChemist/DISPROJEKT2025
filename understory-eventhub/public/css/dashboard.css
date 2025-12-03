@@ -178,6 +178,8 @@ body.dashboard-body {
 .event-footer {
   display: flex;
   align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .event-actions {
@@ -200,6 +202,78 @@ body.dashboard-body {
 .btn-ghost:hover {
   background: rgba(241, 249, 126, 0.12);
   border-color: rgba(241, 249, 126, 0.8);
+}
+
+/* ================================
+   SIGNUPS LIST
+================================ */
+.signup-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 240px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.signup-title {
+  font-weight: 600;
+}
+
+.signup-count {
+  background: rgba(241, 249, 126, 0.2);
+  color: #f1f97e;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.signup-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  display: none;
+}
+
+.signup-section.open .signup-list {
+  display: flex;
+}
+
+.signup-list li {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.signup-empty {
+  opacity: 0.7;
+}
+
+.signup-name {
+  font-weight: 600;
+}
+
+.signup-phone {
+  font-family: "Inter", monospace;
+  opacity: 0.9;
+}
+
+.signup-time {
+  text-align: right;
+  opacity: 0.75;
 }
 
 /* ================================

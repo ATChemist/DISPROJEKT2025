@@ -7,12 +7,16 @@ const {
   createEvent,
   getMyEvents,
   deleteEvent,
+  signupForEvent,
+  listEventSignups,
 } = require("../controllers/events.controller");
 const { requireAuth } = require("../auth.middleware");
 
 router.get("/", listEvents);
 // Place specific routes before parameterized routes
 router.get("/mine", requireAuth, getMyEvents);
+router.post("/:id/signup", signupForEvent);
+router.get("/:id/signups", requireAuth, listEventSignups);
 router.get("/:id", getEvent);
 
 // Protected: create event, list host's events

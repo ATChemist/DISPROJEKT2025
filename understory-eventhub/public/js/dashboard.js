@@ -95,7 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const whenString = ev.start_time || ev.when || '';
       const location = ev.location || '';
-      const spots = ev.spots != null ? `${ev.spots} pladser` : '';
+      const signupCount = ev.signup_count || 0;
+      const hasLimit = ev.spots != null;
+      const available = hasLimit ? Math.max(ev.spots - signupCount, 0) : null;
+      const spots = hasLimit
+        ? available > 0
+          ? `${available} ledige pladser`
+          : 'Udsolgt'
+        : 'Åben tilmelding';
 
       meta.textContent = [whenString, location, spots].filter(Boolean).join(' · ');
       main.appendChild(meta);
@@ -113,6 +120,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const actions = document.createElement('div');
       actions.className = 'event-actions';
+
+      // --- Tilmeldinger (vises under actions) ---
+      const signupSection = document.createElement('div');
+      signupSection.className = 'signup-section';
+
+      const signupHeader = document.createElement('div');
+      signupHeader.className = 'signup-header';
+      const signupTitle = document.createElement('p');
+      signupTitle.className = 'signup-title';
+      signupTitle.textContent = 'Tilmeldte';
+      const signupCountEl = document.createElement('span');
+      signupCountEl.className = 'signup-count';
+      signupCountEl.textContent = '–';
+      signupHeader.appendChild(signupTitle);
+      signupHeader.appendChild(signupCountEl);
+
+      const signupList = document.createElement('ul');
+      signupList.className = 'signup-list';
+      signupList.innerHTML = '<li class="signup-empty">Klik for at hente tilmeldinger</li>';
+
+      const loadBtn = document.createElement('button');
+      loadBtn.className = 'btn-ghost';
+      loadBtn.textContent = 'Se tilmeldte';
+
+      let loadedOnce = false;
+      let visible = false;
+
+      async function loadSignups() {
+        signupList.innerHTML = '<li class="signup-empty">Henter...</li>';
+        loadBtn.disabled = true;
+        try {
+          const resp = await fetch(`/api/events/${ev.id}/signups`);
+          if (!resp.ok) throw new Error('Kunne ikke hente tilmeldinger');
+          const rows = await resp.json();
+          signupCountEl.textContent = rows.length;
+          if (!rows.length) {
+            signupList.innerHTML = '<li class="signup-empty">Ingen tilmeldte endnu</li>';
+          } else {
+            signupList.innerHTML = '';
+            rows.forEach((row) => {
+              const li = document.createElement('li');
+              const ts = row.created_at
+                ? new Date(row.created_at).toLocaleString('da-DK', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })
+                : '';
+              li.innerHTML = `<span class="signup-name">${row.name}</span><span class="signup-phone">${row.phone}</span><span class="signup-time">${ts}</span>`;
+              signupList.appendChild(li);
+            });
+          }
+          loadedOnce = true;
+        } catch (err) {
+          console.error(err);
+          signupList.innerHTML = '<li class="signup-empty">Fejl ved hentning</li>';
+        } finally {
+          loadBtn.disabled = false;
+        }
+      }
+
+      loadBtn.addEventListener('click', () => {
+        visible = !visible;
+        signupSection.classList.toggle('open', visible);
+        loadBtn.textContent = visible ? 'Skjul tilmeldte' : 'Se tilmeldte';
+        if (visible && !loadedOnce) {
+          loadSignups();
+        }
+      });
+      loadBtn.textContent = 'Se tilmeldte';
+
+      signupSection.appendChild(signupHeader);
+      signupSection.appendChild(signupList);
+      signupSection.appendChild(loadBtn);
 
       const editBtn = document.createElement('button');
       editBtn.className = 'btn-ghost';
@@ -137,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
       actions.appendChild(editBtn);
       actions.appendChild(deleteBtn);
       footer.appendChild(actions);
+      footer.appendChild(signupSection);
 
       card.appendChild(main);
       card.appendChild(footer);

@@ -5,6 +5,9 @@ function requireAuth(req, res, next) {
   const token = req.cookies && req.cookies.token;
 
   if (!token) {
+    if (isApiRequest(req)) {
+      return res.status(401).json({ error: "Login påkrævet" });
+    }
     return res.redirect("/?login=1");
   }
 
@@ -12,6 +15,9 @@ function requireAuth(req, res, next) {
   jwt.verify(token, secret, (err, payload) => {
     if (err) {
       console.error("JWT verify error:", err);
+      if (isApiRequest(req)) {
+        return res.status(401).json({ error: "Login påkrævet" });
+      }
       return res.redirect("/?login=1");
     }
 
@@ -22,6 +28,10 @@ function requireAuth(req, res, next) {
 
     next();
   });
+}
+
+function isApiRequest(req) {
+  return req.originalUrl.startsWith("/api/");
 }
 
 function authStatus(req, res) {

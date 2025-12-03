@@ -33,6 +33,17 @@ db.serialize(() => {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS event_signups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (event_id) REFERENCES events(id)
+    )
+  `);
+
   // Migration: If the table exists and has a quoted "when" column, copy it into start_time (if start_time missing)
   db.all(`PRAGMA table_info(events)`, [], (err, rows) => {
     if (err) return console.error('Could not read events table info', err);

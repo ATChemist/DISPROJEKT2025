@@ -2,4 +2,4 @@ node_modules/
 mydb.sqlite
 *.db
 *.sqlite
-
+.env

@@ -68,6 +68,23 @@
             <p><strong>Sted:</strong> <span id="event-location"></span></p>
             <p><strong>Ledige pladser:</strong> <span id="event-spots"></span></p>
           </div>
+
+          <div class="event-signup-card">
+            <h3>Tilmeld dig</h3>
+            <p class="signup-lead">Skriv dine oplysninger og få en SMS-bekræftelse.</p>
+            <form id="event-signup-form" class="signup-form">
+              <label for="signup-name">Navn</label>
+              <input type="text" id="signup-name" name="name" placeholder="Dit navn" required />
+
+              <label for="signup-phone">Telefon</label>
+              <input type="tel" id="signup-phone" name="phone" placeholder="+45 12 34 56 78" required />
+
+              <p class="signup-hint">Bekræftelsen sendes via Twilio.</p>
+
+              <button class="btn-primary small full-width" type="submit" id="signup-submit">Tilmeld</button>
+              <p id="signup-status" class="signup-status" role="status"></p>
+            </form>
+          </div>
         </aside>
       </div>
     </section>

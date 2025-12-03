@@ -13,7 +13,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     listEl.innerHTML = events
       .map(
-        (e) => `
+        (e) => {
+          const signupCount = e.signup_count || 0;
+          const hasSpotsLimit = e.spots != null;
+          const available = hasSpotsLimit ? Math.max(e.spots - signupCount, 0) : null;
+          const spotLabel = hasSpotsLimit
+            ? available > 0
+              ? `${available} ledige pladser`
+              : "Udsolgt"
+            : "Åben tilmelding";
+
+          const whenText = e.when || e.start_time || "";
+
+          return `
       <article class="event-card" data-event-id="${e.id}">
         ${
           e.thumbnail
@@ -24,15 +36,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         <div class="event-body">
           <h2>${e.title}</h2>
-          <p class="event-meta">${e.when} • ${e.location}</p>
-          <p class="event-meta">${e.duration} • ${e.spots} ledige pladser</p>
+          <p class="event-meta">${whenText} • ${e.location || ""}</p>
+          <p class="event-meta">${e.duration || ""} • ${spotLabel}</p>
           <p class="event-desc">${e.shortDescription}</p>
           <button class="btn-primary small event-open-btn">
             Se detaljer
           </button>
         </div>
       </article>
-    `
+    `;
+        }
       )
       .join("");
 

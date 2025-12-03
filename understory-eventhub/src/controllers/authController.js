@@ -101,7 +101,7 @@ exports.logout = (req, res) => {
   const cookieSecure = process.env.NODE_ENV === "production";
   
   res.clearCookie("token", {
-    httpOnly: false,
+    httpOnly: true,
     secure: cookieSecure,
     sameSite: "lax",
     path: "/" // vigtigt!
