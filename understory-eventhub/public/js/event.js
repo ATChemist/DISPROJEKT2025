@@ -92,7 +92,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Fyld felterne
     titleEl.textContent = event.title;
-    categoryEl.textContent = event.category || "";
+
+    // Pæne labels til kategorier
+    const categoryLabels = {
+      mad: "Mad & drikke",
+      sport: "Sport & træning",
+      kultur: "Kultur & oplevelser",
+      læring: "Workshops & læring",
+      andet: "Andet",
+    };
+    const categoryText = categoryLabels[event.category] || event.category || "—";
+    categoryEl.textContent = categoryText;
 
     const rawWhen = event.when || event.start_time || "";
     let whenText = "";
@@ -132,7 +142,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const available = hasLimit ? Math.max(event.spots - signupCount, 0) : null;
 
     whenEl.textContent = whenText || "TBA";
-    durationEl.textContent = event.duration || "—";
+
+    if (event.duration) {
+      durationEl.textContent = `${event.duration} ${
+        event.duration == 1 ? "time" : "timer"
+      }`;
+    } else {
+      durationEl.textContent = "—";
+    }
+
     locationEl.textContent = locationText || "—";
     if (hasLimit) {
       if (available > 0) {
