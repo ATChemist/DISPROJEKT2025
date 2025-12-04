@@ -1,4 +1,3 @@
-
 .events-page {
     padding-top: 120px; /* så navbar ikke overlapper */
     background: #050816; /* mørk baggrund som forsiden */
@@ -37,7 +36,6 @@
     gap: 26px;
 }
 
-
 .event-card {
     background: rgba(15, 23, 42, 0.75);
     border-radius: 16px;
@@ -55,14 +53,13 @@
 .event-card h2 {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .event-card p {
-    margin: 3px 0;
+    margin: 0;        /* alt styres af gap nu */
     opacity: 0.85;
 }
-
 
 .event-thumb {
     overflow: hidden;
@@ -77,18 +74,24 @@
     display: block;
 }
 
+/* ens spacing mellem alle linjer inde i kortet */
+.event-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .event-body .event-meta {
     font-size: 14px;
     opacity: 0.8;
 }
 
 .event-body .event-desc {
-    margin-top: 8px;
     font-size: 14px;
     opacity: 0.9;
 }
 
-
+/* lidt ekstra top-space til knappen */
 .event-card .btn-primary.small {
     margin-top: 12px;
     width: fit-content;

@@ -51,9 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         <div class="event-body">
           <h2>${e.title}</h2>
-          <p class="event-meta">${whenText} • ${e.location || ""}</p>
-          <p class="event-meta">${e.duration || ""} • ${spotLabel}</p>
-          <p class="event-desc">${e.shortDescription}</p>
+            <p class="event-meta">${whenText}</p>
+            <p class="event-meta">
+            ${e.duration ? `${e.duration} ${e.duration == 1 ? "time" : "timer"}` : ""}
+            </p>
+            <p class="event-meta">${spotLabel}</p>
+            <p class="event-desc">${e.shortDescription}</p>
           <button class="btn-primary small event-open-btn">
             Se detaljer
           </button>

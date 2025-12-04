@@ -116,8 +116,16 @@
         </div>
 
         <div class="form-group">
-          <label for="event-duration">Varighed</label>
-          <input id="event-duration" name="duration" />
+          <label for="event-duration">Varighed (timer)</label>
+            <input 
+            id="event-duration" 
+            name="duration" 
+            type="number" 
+            min="1" 
+            step="1" 
+            placeholder="Eksempelvis 2"
+            required
+            />
         </div>
         <div class="form-group">
           <label for="event-spots">Antal pladser</label>
