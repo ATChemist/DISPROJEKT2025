@@ -135,7 +135,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     durationEl.textContent = event.duration || "—";
     locationEl.textContent = locationText || "—";
     if (hasLimit) {
-      spotsEl.textContent = available > 0 ? `${available} ledige` : "Udsolgt";
+      if (available > 0) {
+        spotsEl.textContent = `${available} ${available === 1 ? "ledig plads" : "ledige pladser"}`;
+      } else {
+        spotsEl.textContent = "Udsolgt";
+      }
     } else {
       spotsEl.textContent = "Åben tilmelding";
     }

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           const available = hasSpotsLimit ? Math.max(e.spots - signupCount, 0) : null;
           const spotLabel = hasSpotsLimit
             ? available > 0
-              ? `${available} ledige pladser`
+              ? `${available} ${available === 1 ? "ledig plads" : "ledige pladser"}`
               : "Udsolgt"
             : "Åben tilmelding";
 
