@@ -10,6 +10,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       listEl.innerHTML = "<p>Der er ingen events lige nu.</p>";
       return;
     }
+    const categoryLabels = {
+      mad: "Mad & drikke",
+      sport: "Sport & træning",
+      kultur: "Kultur & oplevelser",
+      læring: "Workshops & læring",
+      andet: "Andet",
+    }; 
 
     listEl.innerHTML = events
       .map(
@@ -39,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 whenText = rawWhen;
               }
             }
+          const categoryText = categoryLabels[e.category] || e.category || "—";
 
           return `
       <article class="event-card" data-event-id="${e.id}">
@@ -57,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             </p>
             <p class="event-meta">${spotLabel}</p>
             <p class="event-desc">${e.shortDescription}</p>
+            <p class="event-meta">Kategori: ${categoryText}</p>
           <button class="btn-primary small event-open-btn">
             Se detaljer
           </button>
