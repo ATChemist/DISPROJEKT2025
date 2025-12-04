@@ -94,7 +94,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     titleEl.textContent = event.title;
     categoryEl.textContent = event.category || "";
 
-    const whenText = event.when || event.start_time || "";
+    const rawWhen = event.when || event.start_time || "";
+    let whenText = "";
+
+      if (rawWhen) {
+      const d = new Date(rawWhen);
+      if (!isNaN(d)) {
+       whenText = d.toLocaleString("da-DK", {
+      dateStyle: "short",
+      timeStyle: "short",
+        });
+    // Eksempel: "05.12.2025 11.18"
+       } else {
+    // fallback hvis datoen er i et underligt format
+    whenText = rawWhen;
+       }
+    }
     const locationText = event.location || "";
     const metaParts = [whenText, locationText].filter(Boolean);
     metaEl.textContent = metaParts.join(" • ");
