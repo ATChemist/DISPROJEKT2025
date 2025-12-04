@@ -23,7 +23,22 @@ document.addEventListener("DOMContentLoaded", async () => {
               : "Udsolgt"
             : "Åben tilmelding";
 
-          const whenText = e.when || e.start_time || "";
+            const rawWhen = e.when || e.start_time || "";
+            let whenText = "";
+    
+            if (rawWhen) {
+              const d = new Date(rawWhen);
+              if (!isNaN(d)) {
+                whenText = d.toLocaleString("da-DK", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                });
+                // fx: 05.12.2025 11.18
+              } else {
+                // fallback hvis datoen ikke kan parses
+                whenText = rawWhen;
+              }
+            }
 
           return `
       <article class="event-card" data-event-id="${e.id}">
