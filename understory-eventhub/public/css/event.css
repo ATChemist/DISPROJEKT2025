@@ -184,3 +184,135 @@
 .signup-status.success {
   color: #bbf7d0;
 }
+
+.qa-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.qa-header p {
+  opacity: 0.85;
+}
+
+.question-form-card {
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.question-form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.question-form-card input,
+.question-form-card textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  font-size: 14px;
+}
+
+.question-form-card textarea {
+  resize: vertical;
+}
+
+.question-form-card input:focus,
+.question-form-card textarea:focus {
+  outline: none;
+  border-color: #f1f97e;
+}
+
+.question-helper {
+  font-size: 13px;
+  color: rgba(226, 232, 240, 0.8);
+  margin-top: -4px;
+}
+
+.question-status {
+  min-height: 18px;
+  font-size: 13px;
+}
+
+.question-status.error {
+  color: #fca5a5;
+}
+
+.question-status.success {
+  color: #bbf7d0;
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.question-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.question-meta {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.question-text {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.host-reply {
+  background: rgba(100, 116, 139, 0.15);
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(226, 232, 240, 0.15);
+  margin-top: 8px;
+}
+
+.host-reply strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.reply-form textarea {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.reply-form textarea:focus {
+  outline: none;
+  border-color: #f1f97e;
+}
+
+.reply-error {
+  font-size: 12px;
+  color: #fca5a5;
+  min-height: 16px;
+}

@@ -24,13 +24,223 @@ document.addEventListener("DOMContentLoaded", async () => {
   const statusEl = document.getElementById("signup-status");
   const submitBtn = document.getElementById("signup-submit");
 
+  const questionForm = document.getElementById("question-form");
+  const questionNameInput = document.getElementById("question-name");
+  const questionNameRow = document.getElementById("question-name-row");
+  const questionContentInput = document.getElementById("question-content");
+  const questionStatusEl = document.getElementById("question-status");
+  const questionHelperText = document.getElementById("question-helper-text");
+  const questionSubmitBtn = document.getElementById("question-submit");
+  const questionsListEl = document.getElementById("questions-list");
+
   let latestEvent;
+  let currentAuthEmail = null;
+  let isEventHost = false;
 
   const setStatus = (msg, type = "") => {
     if (!statusEl) return;
     statusEl.textContent = msg;
     statusEl.className = `signup-status ${type}`.trim();
   };
+
+  const setQuestionStatus = (msg, type = "") => {
+    if (!questionStatusEl) return;
+    questionStatusEl.textContent = msg;
+    questionStatusEl.className = `question-status ${type}`.trim();
+  };
+
+  const fetchAuthStatus = async () => {
+    try {
+      const res = await fetch("/api/auth-status");
+      const data = await res.json();
+      if (data.loggedIn) {
+        currentAuthEmail = data.email;
+      }
+    } catch (err) {
+      console.error("Auth status fejlede:", err);
+    }
+  };
+
+  const configureQuestionForm = () => {
+    if (!questionForm) return;
+    if (isEventHost) {
+      if (questionNameRow) questionNameRow.style.display = "none";
+      if (questionNameInput) {
+        questionNameInput.required = false;
+        questionNameInput.value = currentAuthEmail || "Vært";
+      }
+      if (questionHelperText) {
+        questionHelperText.textContent =
+          "Du er logget ind som vært. Dit værtsnavn bruges automatisk.";
+      }
+    } else {
+      if (questionNameRow) questionNameRow.style.display = "block";
+      if (questionNameInput) questionNameInput.required = true;
+      if (questionHelperText) {
+        questionHelperText.textContent =
+          "Dit navn vises sammen med spørgsmålet til værten.";
+      }
+    }
+  };
+
+  const renderQuestions = (questions = []) => {
+    if (!questionsListEl) return;
+    questionsListEl.innerHTML = "";
+
+    if (!questions.length) {
+      questionsListEl.innerHTML =
+        '<p class="question-status">Ingen spørgsmål endnu. Vær den første til at spørge!</p>';
+      return;
+    }
+
+    questions.forEach((q) => {
+      const card = document.createElement("article");
+      card.className = "question-card";
+
+      const when = q.created_at ? new Date(q.created_at) : null;
+      const meta = document.createElement("div");
+      meta.className = "question-meta";
+      meta.textContent = `${q.author_name} • ${
+        when ? when.toLocaleString("da-DK", { dateStyle: "short", timeStyle: "short" }) : ""
+      }`;
+
+      const text = document.createElement("p");
+      text.className = "question-text";
+      text.textContent = q.content;
+
+      card.appendChild(meta);
+      card.appendChild(text);
+
+      if (q.host_reply) {
+        const reply = document.createElement("div");
+        reply.className = "host-reply";
+        const replyTitle = document.createElement("strong");
+        replyTitle.textContent = `Svar fra værten (${q.host_reply_author || "Vært"})`;
+        const replyBody = document.createElement("p");
+        replyBody.className = "question-text";
+        replyBody.textContent = q.host_reply;
+        reply.appendChild(replyTitle);
+        reply.appendChild(replyBody);
+        card.appendChild(reply);
+      } else if (isEventHost) {
+        const replyForm = document.createElement("div");
+        replyForm.className = "reply-form";
+        replyForm.innerHTML = `
+          <textarea rows="2" data-question-id="${q.id}" placeholder="Svar til ${q.author_name}"></textarea>
+          <button class="btn-outline small" data-action="send-reply" data-question-id="${q.id}">Send svar</button>
+          <div class="reply-error" data-question-id="${q.id}"></div>
+        `;
+        card.appendChild(replyForm);
+      }
+
+      questionsListEl.appendChild(card);
+    });
+  };
+
+  const loadQuestions = async () => {
+    if (!questionsListEl) return;
+    try {
+      const res = await fetch(`/api/events/${eventId}/questions`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Kunne ikke hente spørgsmål");
+      renderQuestions(data.questions || []);
+    } catch (err) {
+      console.error(err);
+      questionsListEl.innerHTML =
+        '<p class="question-status error">Kunne ikke hente spørgsmål lige nu.</p>';
+    }
+  };
+
+  if (questionForm) {
+    questionForm.addEventListener("submit", async (evt) => {
+      evt.preventDefault();
+      setQuestionStatus("");
+
+      const name = (questionNameInput?.value || "").trim();
+      const content = (questionContentInput?.value || "").trim();
+
+      if (!content) {
+        setQuestionStatus("Skriv dit spørgsmål først.", "error");
+        return;
+      }
+      if (!isEventHost && !name) {
+        setQuestionStatus("Navn er påkrævet.", "error");
+        return;
+      }
+
+      if (questionSubmitBtn) {
+        questionSubmitBtn.disabled = true;
+        questionSubmitBtn.textContent = "Sender...";
+      }
+
+      try {
+        const res = await fetch(`/api/events/${eventId}/questions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, content }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Kunne ikke sende spørgsmålet");
+        setQuestionStatus("Dit spørgsmål er sendt!", "success");
+        questionForm.reset();
+        configureQuestionForm();
+        loadQuestions();
+      } catch (err) {
+        console.error(err);
+        setQuestionStatus(err.message || "Noget gik galt", "error");
+      } finally {
+        if (questionSubmitBtn) {
+          questionSubmitBtn.disabled = false;
+          questionSubmitBtn.textContent = "Send spørgsmål";
+        }
+      }
+    });
+  }
+
+  if (questionsListEl) {
+    questionsListEl.addEventListener("click", async (evt) => {
+      const btn = evt.target.closest("[data-action='send-reply']");
+      if (!btn) return;
+
+      const qId = btn.getAttribute("data-question-id");
+      const textarea = questionsListEl.querySelector(
+        `textarea[data-question-id="${qId}"]`
+      );
+      const errorEl = questionsListEl.querySelector(
+        `.reply-error[data-question-id="${qId}"]`
+      );
+      const replyText = (textarea?.value || "").trim();
+
+      if (!replyText) {
+        if (errorEl) errorEl.textContent = "Skriv et svar først.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sender...";
+      if (errorEl) errorEl.textContent = "";
+
+      try {
+        const res = await fetch(
+          `/api/events/${eventId}/questions/${qId}/answer`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reply: replyText }),
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Kunne ikke gemme svar");
+        loadQuestions();
+      } catch (err) {
+        console.error(err);
+        if (errorEl) errorEl.textContent = err.message || "Noget gik galt";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Send svar";
+      }
+    });
+  }
 
   if (signupForm) {
     signupForm.addEventListener("submit", async (evt) => {
@@ -79,6 +289,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  await fetchAuthStatus();
+
   try {
     const res = await fetch(`/api/events/${eventId}`);
     if (!res.ok) {
@@ -90,10 +302,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const event = await res.json();
     latestEvent = event;
 
-    // Fyld felterne
-    titleEl.textContent = event.title;
-
-    // Pæne labels til kategorier
     const categoryLabels = {
       mad: "Mad & drikke",
       sport: "Sport & træning",
@@ -107,18 +315,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const rawWhen = event.when || event.start_time || "";
     let whenText = "";
 
-      if (rawWhen) {
+    if (rawWhen) {
       const d = new Date(rawWhen);
       if (!isNaN(d)) {
-       whenText = d.toLocaleString("da-DK", {
-      dateStyle: "short",
-      timeStyle: "short",
+        whenText = d.toLocaleString("da-DK", {
+          dateStyle: "short",
+          timeStyle: "short",
         });
-    // Eksempel: "05.12.2025 11.18"
-       } else {
-    // fallback hvis datoen er i et underligt format
-    whenText = rawWhen;
-       }
+    } else {
+        whenText = rawWhen;
+      }
     }
     const locationText = event.location || "";
     const metaParts = [whenText, locationText].filter(Boolean);
@@ -127,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const hostLabel = event.host || event.host_email;
     hostEl.textContent = hostLabel ? `Vært: ${hostLabel}` : "";
 
+    titleEl.textContent = event.title;
     descEl.textContent =
       event.longDescription || event.shortDescription || "Ingen beskrivelse angivet endnu.";
 
@@ -169,6 +376,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       setStatus("Der er ikke flere pladser på dette event.", "error");
       if (submitBtn) submitBtn.textContent = "Udsolgt";
     }
+
+    isEventHost = Boolean(
+      currentAuthEmail &&
+        event.host_email &&
+        currentAuthEmail.toLowerCase() === event.host_email.toLowerCase()
+    );
+    configureQuestionForm();
+    loadQuestions();
+    
   } catch (err) {
     console.error(err);
     titleEl.textContent = "Fejl ved indlæsning af event";
