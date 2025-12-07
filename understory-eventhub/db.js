@@ -42,7 +42,24 @@ db.serialize(() => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (event_id) REFERENCES events(id)
     )
+      
   `);
+  
+  db.run(`
+    CREATE TABLE IF NOT EXISTS event_questions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_id INTEGER NOT NULL,
+      author_name TEXT NOT NULL,
+      content TEXT NOT NULL,
+      is_host INTEGER DEFAULT 0,
+      host_reply TEXT,
+      host_reply_at DATETIME,
+      host_reply_author TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (event_id) REFERENCES events(id)
+    )
+  `);
+
 
   // Migration: If the table exists and has a quoted "when" column, copy it into start_time (if start_time missing)
   db.all(`PRAGMA table_info(events)`, [], (err, rows) => {

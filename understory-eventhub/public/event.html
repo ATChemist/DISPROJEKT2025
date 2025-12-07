@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/event.css" />
 </head>
-<body>
+<body class="event-detail-body">
   <header class="navbar">
     <div class="nav-left">
         <div class="logo">Understory dis 2025</div>
@@ -91,12 +91,41 @@
     </section>
 
     <section class="event-extra">
-      <h2>Community for dette event</h2>
-      <p>Her kommer chatten, media wall og SMS-tilmelding til at ligge.</p>
-
-      <div id="chat-root">
-        <!-- senere: chat UI -->
+      <div class="qa-header">
+        <h2>Spørgsmål til værten</h2>
+        <p>Stil dit spørgsmål til værten.</p>
       </div>
+
+      <div class="question-form-card">
+        <form id="question-form">
+          <div class="form-row" id="question-name-row">
+            <label for="question-name">Dit navn</label>
+            <input
+              type="text"
+              id="question-name"
+              name="name"
+              placeholder="Skriv dit navn"
+              required
+            />
+          </div>
+
+      <label for="question-content">Din besked</label>
+          <textarea
+            id="question-content"
+            name="content"
+            rows="3"
+            placeholder="Hvad vil du gerne spørge værten om?"
+            required
+          ></textarea>
+
+          <p class="question-helper" id="question-helper-text"></p>
+
+          <button class="btn-primary small" type="submit" id="question-submit">Send spørgsmål</button>
+          <p id="question-status" class="question-status" role="status"></p>
+        </form>
+      </div>
+
+      <div id="questions-list" class="questions-list" aria-live="polite"></div>
     </section>
   </main>
 

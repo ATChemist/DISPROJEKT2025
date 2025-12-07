@@ -11,10 +11,23 @@ const {
   listEventSignups,
   updateEvent,
 } = require("../controllers/events.controller");
+const {
+  listQuestionsForEvent,
+  createQuestionForEvent,
+  answerQuestionForEvent,
+} = require("../controllers/eventQuestions.controller");
+
 const { requireAuth } = require("../auth.middleware");
 
 router.get("/", listEvents);
 // Place specific routes before parameterized routes
+router.get("/:id/questions", listQuestionsForEvent);
+router.post("/:id/questions", createQuestionForEvent);
+router.post(
+  "/:id/questions/:questionId/answer",
+  requireAuth,
+  answerQuestionForEvent
+);
 router.get("/mine", requireAuth, getMyEvents);
 router.post("/:id/signup", signupForEvent);
 router.get("/:id/signups", requireAuth, listEventSignups);
