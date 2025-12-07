@@ -36,7 +36,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   let latestEvent;
   let currentAuthEmail = null;
   let isEventHost = false;
+  
+const applyReplyButtonStyling = () => {
+    document.querySelectorAll("button").forEach((btn) => {
+      if (btn.textContent.trim().toLowerCase() === "svar") {
+        btn.classList.add("btn-primary", "small");
+      }
+    });
+  };
 
+  const replyObserver = new MutationObserver(() => applyReplyButtonStyling());
+  replyObserver.observe(document.body, { childList: true, subtree: true });
+  applyReplyButtonStyling();
   const setStatus = (msg, type = "") => {
     if (!statusEl) return;
     statusEl.textContent = msg;

@@ -1,7 +1,12 @@
+.event-detail-body {
+  background: #050816;
+}
+
 .event-detail-page {
   padding-top: 120px; /* plads til navbar */
   background: #050816;
   min-height: 100vh;
+  padding-bottom: 120px;
   color: white;
   font-family: "Inter", sans-serif;
 }
@@ -107,7 +112,7 @@
 .event-extra {
   max-width: 1100px;
   margin: 0 auto 60px auto;
-  padding: 0 30px;
+  padding: 0 30px 40px 30px;
 }
 
 .event-extra h2 {
