@@ -12,9 +12,14 @@ const pagesRoutes = require("./routes/pages.routes");
 const authRoutes = require("./routes/auth.routes");
 const { requireAuth, authStatus } = require("./auth.middleware");
 
+app.get("/ping", (req, res) => {
+  const serverReceiveTime = Date.now();
 
-
-
+  res.json({
+    message: "pong",
+    serverReceiveTime,        // hvornår serveren modtog request
+  });
+});
 
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.json());
