@@ -1,5 +1,6 @@
 // public/event.js
 document.addEventListener("DOMContentLoaded", async () => {
+  // Parse event id fra URL-stien (sidste segment)
   const parts = window.location.pathname.split("/");
   const eventId = parts[parts.length - 1];
 
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // DOM-elementer vi benytter til at vise event og håndtere interaktioner
   const titleEl = document.getElementById("event-title");
   const metaEl = document.getElementById("event-meta");
   const hostEl = document.getElementById("event-host");
@@ -24,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const statusEl = document.getElementById("signup-status");
   const submitBtn = document.getElementById("signup-submit");
 
+  // Spørgsmål (Q&A) relaterede elementer
   const questionForm = document.getElementById("question-form");
   const questionNameInput = document.getElementById("question-name");
   const questionNameRow = document.getElementById("question-name-row");
@@ -33,11 +36,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const questionSubmitBtn = document.getElementById("question-submit");
   const questionsListEl = document.getElementById("questions-list");
 
+  // Lokale variabler til state
   let latestEvent;
   let currentAuthEmail = null;
   let isEventHost = false;
   
-const applyReplyButtonStyling = () => {
+  // Gør "Svar"-knapper mere tydelige hvis de findes i DOM (styling)
+  const applyReplyButtonStyling = () => {
     document.querySelectorAll("button").forEach((btn) => {
       if (btn.textContent.trim().toLowerCase() === "svar") {
         btn.classList.add("btn-primary", "small");
@@ -45,21 +50,26 @@ const applyReplyButtonStyling = () => {
     });
   };
 
+  // Observer for at sikre styling også anvendes på dynamisk tilføjede knapper
   const replyObserver = new MutationObserver(() => applyReplyButtonStyling());
   replyObserver.observe(document.body, { childList: true, subtree: true });
   applyReplyButtonStyling();
+
+  // Hjælper til signup-status-visning
   const setStatus = (msg, type = "") => {
     if (!statusEl) return;
     statusEl.textContent = msg;
     statusEl.className = `signup-status ${type}`.trim();
   };
 
+  // Hjælper til question-form status-visning
   const setQuestionStatus = (msg, type = "") => {
     if (!questionStatusEl) return;
     questionStatusEl.textContent = msg;
     questionStatusEl.className = `question-status ${type}`.trim();
   };
 
+  // Hent login-status fra API (bruges til at afgøre om bruger er vært)
   const fetchAuthStatus = async () => {
     try {
       const res = await fetch("/api/auth-status");
@@ -72,9 +82,11 @@ const applyReplyButtonStyling = () => {
     }
   };
 
+  // Konfigurer spørgeformular afhængigt af om brugeren er vært
   const configureQuestionForm = () => {
     if (!questionForm) return;
     if (isEventHost) {
+      // Hvis vært: skjul navn-felt og forudfyld med værtens e-mail/label
       if (questionNameRow) questionNameRow.style.display = "none";
       if (questionNameInput) {
         questionNameInput.required = false;
@@ -85,6 +97,7 @@ const applyReplyButtonStyling = () => {
           "Du er logget ind som vært. Dit værtsnavn bruges automatisk.";
       }
     } else {
+      // Ikke vært: vis navn-felt og gør det påkrævet
       if (questionNameRow) questionNameRow.style.display = "block";
       if (questionNameInput) questionNameInput.required = true;
       if (questionHelperText) {
@@ -94,6 +107,7 @@ const applyReplyButtonStyling = () => {
     }
   };
 
+  // Render liste af spørgsmål i DOM
   const renderQuestions = (questions = []) => {
     if (!questionsListEl) return;
     questionsListEl.innerHTML = "";
@@ -123,6 +137,7 @@ const applyReplyButtonStyling = () => {
       card.appendChild(text);
 
       if (q.host_reply) {
+        // Hvis vært allerede har svaret på spørgsmålet: vis svaret
         const reply = document.createElement("div");
         reply.className = "host-reply";
         const replyTitle = document.createElement("strong");
@@ -134,6 +149,7 @@ const applyReplyButtonStyling = () => {
         reply.appendChild(replyBody);
         card.appendChild(reply);
       } else if (isEventHost) {
+        // Hvis bruger er vært og spørgsmålet ikke har svar: vis reply-form
         const replyForm = document.createElement("div");
         replyForm.className = "reply-form";
         replyForm.innerHTML = `
@@ -148,6 +164,7 @@ const applyReplyButtonStyling = () => {
     });
   };
 
+  // Load spørgsmål via API
   const loadQuestions = async () => {
     if (!questionsListEl) return;
     try {
@@ -162,6 +179,7 @@ const applyReplyButtonStyling = () => {
     }
   };
 
+  // Håndter submit af spørgeformular
   if (questionForm) {
     questionForm.addEventListener("submit", async (evt) => {
       evt.preventDefault();
@@ -208,6 +226,7 @@ const applyReplyButtonStyling = () => {
     });
   }
 
+  // Event delegation: håndter afsendelse af svar fra vært (reply)
   if (questionsListEl) {
     questionsListEl.addEventListener("click", async (evt) => {
       const btn = evt.target.closest("[data-action='send-reply']");
@@ -253,6 +272,7 @@ const applyReplyButtonStyling = () => {
     });
   }
 
+  // Håndter signup-form submission
   if (signupForm) {
     signupForm.addEventListener("submit", async (evt) => {
       evt.preventDefault();
@@ -300,8 +320,10 @@ const applyReplyButtonStyling = () => {
     });
   }
 
+  // Hent auth-status først så vi kan afgøre værtsrettigheder
   await fetchAuthStatus();
 
+  // Hent event-data og render det i UI
   try {
     const res = await fetch(`/api/events/${eventId}`);
     if (!res.ok) {
@@ -313,6 +335,7 @@ const applyReplyButtonStyling = () => {
     const event = await res.json();
     latestEvent = event;
 
+    // Kort mapping af kategorier til menneskevenligt label
     const categoryLabels = {
       mad: "Mad & drikke",
       sport: "Sport & træning",
@@ -323,6 +346,7 @@ const applyReplyButtonStyling = () => {
     const categoryText = categoryLabels[event.category] || event.category || "—";
     categoryEl.textContent = categoryText;
 
+    // Formatér tidspunkt til læsbart format
     const rawWhen = event.when || event.start_time || "";
     let whenText = "";
 
@@ -333,7 +357,7 @@ const applyReplyButtonStyling = () => {
           dateStyle: "short",
           timeStyle: "short",
         });
-    } else {
+      } else {
         whenText = rawWhen;
       }
     }
@@ -341,13 +365,16 @@ const applyReplyButtonStyling = () => {
     const metaParts = [whenText, locationText].filter(Boolean);
     metaEl.textContent = metaParts.join(" • ");
 
+    // Værtens label (e-mail eller navn)
     const hostLabel = event.host || event.host_email;
     hostEl.textContent = hostLabel ? `Vært: ${hostLabel}` : "";
 
+    // Grundlæggende event-tekster
     titleEl.textContent = event.title;
     descEl.textContent =
       event.longDescription || event.shortDescription || "Ingen beskrivelse angivet endnu.";
 
+    // Thumbnail håndtering
     if (event.thumbnail) {
       imageEl.src = event.thumbnail;
       imageEl.alt = event.title;
@@ -355,6 +382,7 @@ const applyReplyButtonStyling = () => {
       imageEl.style.display = "none";
     }
 
+    // Beregn pladssituation
     const signupCount = event.signup_count || 0;
     const hasLimit = event.spots != null;
     const available = hasLimit ? Math.max(event.spots - signupCount, 0) : null;
@@ -380,6 +408,7 @@ const applyReplyButtonStyling = () => {
       spotsEl.textContent = "Åben tilmelding";
     }
 
+    // Hvis udsolgt: deaktiver signup-form og vis besked
     if (hasLimit && available <= 0 && signupForm) {
       signupForm.querySelectorAll("input, button").forEach((el) => {
         el.disabled = true;
@@ -388,6 +417,7 @@ const applyReplyButtonStyling = () => {
       if (submitBtn) submitBtn.textContent = "Udsolgt";
     }
 
+    // Afgør om den aktuelle bruger er vært for eventet
     isEventHost = Boolean(
       currentAuthEmail &&
         event.host_email &&
