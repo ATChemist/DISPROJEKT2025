@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // DOM-elementer vi bruger på siden
   const openBtn = document.getElementById('open-create-event');
   const modal = document.getElementById('create-event-modal');
   const closeBtn = document.getElementById('create-event-close');
@@ -20,8 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const statActive = document.getElementById('stat-active-events');
   const statUpcoming = document.getElementById('stat-upcoming-events');
 
+  // Holder id'et på det event vi redigerer (hvis nogen)
   let editingEventId = null;
 
+  // Sætter modal/form tilbage til opret-tilstand
   function resetFormMode() {
     editingEventId = null;
     if (modalTitle) modalTitle.textContent = 'Opret event';
@@ -29,23 +32,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) form.reset();
   }
 
+  // Åbner og lukker modal
   function openModal() { modal.classList.add('active'); }
   function closeModal() {
     modal.classList.remove('active');
     resetFormMode();
   }
 
+  // Knap-event handlers for at åbne/lukke modal
   if (openBtn) openBtn.addEventListener('click', () => {
     resetFormMode();
     openModal();
   });
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   if (modal) {
+    // Luk modal når bruger klikker uden for indholdet
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
   }
 
+  // Henter login-status og redirecter hvis ikke logget ind
   async function fetchAuthStatus() {
     try {
       const res = await fetch('/api/auth-status');
@@ -54,12 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/';
         return;
       }
+      // Vis velkomsttekst med brugerens e-mail
       welcome.textContent = `Velkommen, ${data.email}`;
     } catch (err) {
       console.error('Failed to fetch auth status', err);
     }
   }
 
+  // Henter events for den loggede host og renderer dem
   async function fetchMyEvents() {
     try {
       const res = await fetch('/api/events/mine');
@@ -75,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Opdaterer statistik-panel (antal aktive / kommende)
   function updateStats(events) {
     if (!Array.isArray(events)) return;
 
@@ -88,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (statUpcoming) statUpcoming.textContent = upcoming || '0';
   }
 
+  // Hjælper til at formatere dato til <input type="datetime-local">
   function formatDateInput(value) {
     if (!value) return '';
     if (value.includes('T')) return value.slice(0, 16);
@@ -97,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 
+  // Fylder formular med data fra et event (bruges ved redigering)
   function populateForm(ev) {
     if (titleInput) titleInput.value = ev.title || '';
     if (shortDescInput) shortDescInput.value = ev.shortDescription || '';
@@ -108,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (thumbnailInput) thumbnailInput.value = ev.thumbnail || '';
   }
 
+  // Sætter modal i redigerings-mode og åbner den
   function startEdit(ev) {
     editingEventId = ev.id;
     if (modalTitle) modalTitle.textContent = 'Rediger event';
@@ -116,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openModal();
   }
 
+  // Renderer event-listerne i DOM
   function renderEvents(events) {
     if (!events || events.length === 0) {
       hostEventsContainer.innerHTML = '';
@@ -130,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('article');
       card.className = 'event-card';
 
-      // --- Venstre side (titel + meta + beskrivelse) ---
+      // Venstre side (titel + meta + beskrivelse) 
       const main = document.createElement('div');
       main.className = 'event-main';
 
@@ -146,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const meta = document.createElement('p');
       meta.className = 'event-meta';
 
+      // Byg meta-streng: tid, sted og pladssituation
       const whenString = ev.start_time || ev.when || '';
       const location = ev.location || '';
       const signupCount = ev.signup_count || 0;
@@ -167,14 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
         main.appendChild(desc);
       }
 
-      // --- Højre side (actions) ---
+      // Højre side (actions) 
       const footer = document.createElement('div');
       footer.className = 'event-footer';
 
       const actions = document.createElement('div');
       actions.className = 'event-actions';
 
-      // --- Tilmeldinger (vises under actions) ---
+      // Tilmeldinger (vises under actions) 
       const signupSection = document.createElement('div');
       signupSection.className = 'signup-section';
 
@@ -197,9 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
       loadBtn.className = 'btn-ghost';
       loadBtn.textContent = 'Se tilmeldte';
 
+      // State for indlæsning/visning af tilmeldinger
       let loadedOnce = false;
       let visible = false;
 
+      // Henter tilmeldinger for et event fra API'et
       async function loadSignups() {
         signupList.innerHTML = '<li class="signup-empty">Henter...</li>';
         loadBtn.disabled = true;
@@ -223,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     year: 'numeric',
                   })
                 : '';
+              // Hver tilmelding viser navn, telefon og tid
               li.innerHTML = `<span class="signup-name">${row.name}</span><span class="signup-phone">${row.phone}</span><span class="signup-time">${ts}</span>`;
               signupList.appendChild(li);
             });
@@ -236,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      // Toggle visning af tilmeldingssektionen og indlæs første gang ved åbning
       loadBtn.addEventListener('click', () => {
         visible = !visible;
         signupSection.classList.toggle('open', visible);
@@ -250,11 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
       signupSection.appendChild(signupList);
       signupSection.appendChild(loadBtn);
 
+      // Rediger-knap starter redigerings-flow
       const editBtn = document.createElement('button');
       editBtn.className = 'btn-ghost';
       editBtn.textContent = 'Rediger';
       editBtn.addEventListener('click', () => startEdit(ev));
 
+      // Slet-knap sender DELETE til API og opdaterer liste
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'btn-ghost';
       deleteBtn.textContent = 'Slet';
@@ -282,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Formular-submission: opret eller opdater event via API
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -290,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (const [k, v] of fd.entries()) {
         payload[k] = v;
       }
+      // Sørg for at spots er et tal hvis udfyldt
       if (payload.spots) payload.spots = parseInt(payload.spots, 10);
       const targetId = editingEventId;
       const url = targetId ? `/api/events/${targetId}` : '/api/events';
@@ -315,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Initial opstart: tjek login og hent events
   fetchAuthStatus();
   fetchMyEvents();
 });

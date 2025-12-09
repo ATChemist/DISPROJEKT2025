@@ -1,6 +1,4 @@
-/* ================================
-   GLOBALT – kun for dashboard
-================================ */
+/*GLOBALT – kun for dashboard*/
 
 body.dashboard-body {
   background: #050816; /* samme mørke baggrund som events-siden */
@@ -15,9 +13,7 @@ body.dashboard-body {
   padding: 120px 24px 0; /* 120px så vi kommer under navbaren */
 }
 
-/* ================================
-   TOPSEKTION (titel + stats)
-================================ */
+/*TOPSEKTION (titel + stats) */
 
 .dashboard-top {
   display: flex;
@@ -85,9 +81,7 @@ body.dashboard-body {
   color: #ffffff;
 }
 
-/* ================================
-   SEKTIONS-HEADER
-================================ */
+/*SEKTIONS-HEADER */
 
 .dashboard-section {
   margin-top: 12px;
@@ -111,9 +105,7 @@ body.dashboard-body {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* ================================
-   EVENTS GRID
-================================ */
+/* EVENTS GRID */
 
 .events-grid {
   display: grid;
@@ -122,9 +114,7 @@ body.dashboard-body {
   margin-top: 18px;
 }
 
-/* ================================
-   EVENT CARDS (dashboard)
-================================ */
+/* EVENT CARDS (dashboard) */
 
 .event-card {
   background: rgba(15, 23, 42, 0.85);          /* mørk glas */
@@ -204,9 +194,7 @@ body.dashboard-body {
   border-color: rgba(241, 249, 126, 0.8);
 }
 
-/* ================================
-   SIGNUPS LIST
-================================ */
+/* SIGNUPS LIST */
 .signup-section {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -276,9 +264,7 @@ body.dashboard-body {
   opacity: 0.75;
 }
 
-/* ================================
-   EMPTY STATE
-================================ */
+/* EMPTY STATE */
 
 .empty-state {
   grid-column: 1 / -1;
@@ -300,9 +286,7 @@ body.dashboard-body {
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* ================================
-   RESPONSIVT
-================================ */
+/* RESPONSIVT */
 
 @media (max-width: 768px) {
   .dashboard-shell {
@@ -333,9 +317,7 @@ body.dashboard-body {
   }
 }
 
-/* ================================
-   FORM FIELDS (inputs + select)
-================================ */
+/* FORM FIELDS (inputs + select) */
 
 .form-group input,
 .form-group select {

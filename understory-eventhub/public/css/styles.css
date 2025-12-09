@@ -16,7 +16,7 @@ body {
     padding: 20px;
 }
 
-/* ---------- DASHBOARD STYLES ---------- */
+/* DASHBOARD STYLES */
 .dashboard-header-simple { padding: 20px 0 10px 0; color: #111; }
 .dashboard-header-simple h1 { margin: 0; font-size: 36px; color: #111; }
 .dashboard-header-simple .muted { color: rgba(0,0,0,0.6); margin-top: 6px; }
@@ -95,7 +95,7 @@ body {
     color: white;
 }
 
-/* ---------- BUTTONS ---------- */
+/* BUTTONS */
 .btn-primary,
 .btn-outline {
     padding: 11px 22px;
@@ -144,7 +144,7 @@ body {
     z-index: -2;
 }
 
-/* ---------- LOGIN MODAL (MATCHER DESIGNET) ---------- */
+/* LOGIN MODAL (MATCHER DESIGNET) */
 
 .modal-overlay {
     position: fixed;
