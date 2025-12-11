@@ -47,11 +47,16 @@ function validateEvent(req, res, next) {
   const titleError = requireString("Titel", req.body?.title);
   if (titleError) return fail(res, titleError);
 
-  const timeError = requireString("Tidspunkt", req.body?.time);
-  if (timeError) return fail(res, timeError);
+  // Accept both legacy "time" and current "when" from the form
+  const whenValue = req.body?.when ?? req.body?.time;
+  const whenError = requireString("Hvornår", whenValue);
+  if (whenError) return fail(res, whenError);
 
   req.body.title = req.body.title.trim();
-  req.body.time = req.body.time.trim();
+  const trimmedWhen = whenValue.trim();
+  req.body.when = trimmedWhen;
+  // Keep "time" in sync in case downstream code still reads it
+  if (req.body.time) req.body.time = trimmedWhen;
   next();
 }
 
