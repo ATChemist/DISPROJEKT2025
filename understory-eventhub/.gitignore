@@ -3,3 +3,4 @@ mydb.sqlite
 *.db
 *.sqlite
 .env
+understory-eventhub/mydb.sqlite
