@@ -49,8 +49,12 @@ exports.register = (req, res) => {
 // LOGIN: POST /auth/login
 exports.login = (req, res) => {
   const { email, password } = req.body;
+  const wantsJson =
+    (req.headers.accept && req.headers.accept.includes("application/json")) ||
+    (req.headers["content-type"] && req.headers["content-type"].includes("application/json"));
 
   if (!email || !password) {
+    if (wantsJson) return res.status(400).json({ error: "Email og kodeord er påkrævet" });
     return res.status(400).send("Email og kodeord er påkrævet");
   }
 
@@ -58,10 +62,12 @@ exports.login = (req, res) => {
   findHostByEmail(email, (err, host) => {
     if (err) {
       console.error(err);
+      if (wantsJson) return res.status(500).json({ error: "Databasefejl" });
       return res.status(500).send("Databasefejl");
     }
 
     if (!host) {
+      if (wantsJson) return res.status(401).json({ error: "Forkert email eller kodeord" });
       return res.status(401).send("Forkert email eller kodeord");
     }
 
@@ -69,10 +75,12 @@ exports.login = (req, res) => {
     bcrypt.compare(password, host.password_hash, (err2, same) => {
       if (err2) {
         console.error(err2);
+        if (wantsJson) return res.status(500).json({ error: "Fejl ved password-check" });
         return res.status(500).send("Fejl ved password-check");
       }
 
       if (!same) {
+        if (wantsJson) return res.status(401).json({ error: "Forkert email eller kodeord" });
         return res.status(401).send("Forkert email eller kodeord");
       }
       const secret = process.env.JWT_SECRET || "dev-secret-placeholder";
@@ -92,6 +100,9 @@ exports.login = (req, res) => {
 
       console.log("Host logget ind:", host.email);
 
+      if (wantsJson) {
+        return res.json({ success: true, redirect: "/host/dashboard" });
+      }
       return res.redirect("/host/dashboard"); // redirect to protected dashboard
     });
   });

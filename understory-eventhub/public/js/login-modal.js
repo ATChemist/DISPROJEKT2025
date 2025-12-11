@@ -9,10 +9,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerCloseBtn = document.getElementById("register-close-btn");
 
   const openRegisterFromLogin = document.getElementById("open-register-from-login");
+  const loginForm = loginModal ? loginModal.querySelector("form") : null;
+  const loginErrorBox = document.getElementById("login-error");
 
   if (!loginModal || !registerModal) return;
 
+  function showLoginError(message) {
+    if (!loginErrorBox) return;
+    loginErrorBox.textContent = message;
+    loginErrorBox.classList.add("visible");
+  }
+
+  function clearLoginError() {
+    if (!loginErrorBox) return;
+    loginErrorBox.textContent = "";
+    loginErrorBox.classList.remove("visible");
+  }
+
   function openModal(modal) {
+    if (modal === loginModal) {
+      clearLoginError();
+    }
     modal.classList.add("active");   // BRUGER KUN 'active'
   }
 
@@ -52,6 +69,43 @@ document.addEventListener("DOMContentLoaded", () => {
   registerModal.addEventListener("click", (e) => {
     if (e.target === registerModal) closeModal(registerModal);
   });
+
+  // LOGIN SUBMIT VIA FETCH FOR AT BLIVE I MODAL
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearLoginError();
+
+      const payload = {
+        email: loginForm.email.value.trim(),
+        password: loginForm.password.value.trim(),
+      };
+
+      try {
+        const res = await fetch("/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          showLoginError(data.error || "Forkert email eller kodeord");
+          return;
+        }
+
+        const redirectTo = data.redirect || "/host/dashboard";
+        window.location.href = redirectTo;
+      } catch (err) {
+        console.error("Login fejlede:", err);
+        showLoginError("Noget gik galt. Prøv igen om lidt.");
+      }
+    });
+  }
 });
 
 document.addEventListener("DOMContentLoaded", async () => {

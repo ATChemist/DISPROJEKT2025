@@ -221,6 +221,21 @@ body {
     border-color: #F1F97E;
 }
 
+.form-error {
+    display: none;
+    background: rgba(255, 99, 99, 0.12);
+    border: 1px solid rgba(255, 99, 99, 0.45);
+    color: #ffdede;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.form-error.visible {
+    display: block;
+}
+
 .modal button[type="submit"] {
     width: 100%;
     border: none;
